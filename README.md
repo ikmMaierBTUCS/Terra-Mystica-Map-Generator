@@ -5,11 +5,7 @@ Run the code by executing the following commands:
 
 1 Create a colorless map for given river layout with parameters (height, width, form, rivers)
 
-height is the number of horizontal lines of hexes
-width is the number of hexes in in the LONGER lines (remember that between 2 longer lines is a line shorter by one)
-form = 0, if the uppermost line is longer, form = 1, if the uppermost line is shorter
-rivers is the list of coordinates occupied by rivers. CAUTION: the coordinates are written (column, row)
-here you can copy the layout of some well-known maps: original, F&I, fjords, loon lakes, archipelago and arrow
+you can also copy the layout of some well-known maps: original, F&I, fjords, loon lakes, archipelago and arrow
 
 hex_map = HexagonalMap(9,13,0,[(2,0),(2,1),(6,1),(7,1),(8,1),(9,1),(10,1),(3,2),(4,2),(6,2),(11,2),(0,3),(1,3),(2,3),(4,3),(5,3),(11,3),(12,3),(3,4),(6,4),(11,4),(2,5),(6,5),(10,5),(2,6),(7,6),(10,6),(1,7),(7,7),(8,7),(9,7),(1,8),(2,8),(7,8)])
 
