@@ -1,7 +1,7 @@
 # Terra-Mystica-Map-Generator
 Create a Terra Mystica map for a given river layout
 
-Run the code by executing the following commands:
+Run the code in TM MapGen(1).py by executing the following commands:
 
 1 Create a colorless map for given river layout with parameters (height, width, form, rivers)
 
