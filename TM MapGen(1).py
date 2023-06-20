@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[9]:
+# In[6]:
 
 
 import math
 import random
 from IPython.display import display, HTML
+import matplotlib.pyplot as plt
+from matplotlib.patches import RegularPolygon
+import numpy as np
 
 class HexagonalMap:
     def __init__(self, height, width, form, rivers):
@@ -31,7 +34,7 @@ class HexagonalMap:
         
     def work_distance(self, hexf, color):
         # measure of work required to get from hexf to the next hex of colour color
-        maximal_work = 210
+        maximal_work = 168
         if self.stock(color) == 0: # check if any hexes of same color exist yet
             print('no '+color+' yet')
             return maximal_work
@@ -101,8 +104,8 @@ class HexagonalMap:
         self.display_map()
         
         # randomize start field
-        start_y = random.randint(0,self.height - 1)
-        start_x = random.randint(0,self.width - ((start_y + self.form) % 2) - 1)
+        start_y = random.randint(2,self.height - 3)
+        start_x = random.randint(2,self.width - ((start_y + self.form) % 2) - 3)
         current_hex = (start_x,start_y)
         if self.map[current_hex] != ' ~ ':        
             self.map[current_hex] = self.colors[random.randint(0,6)]
@@ -164,7 +167,7 @@ class HexagonalMap:
                 share_scores = {}
                 accumulated_scores = []
                 for color in ['red','yel','bro','bla','blu','grn','gry']:
-                    score = self.share_score(current_hex,color)**2
+                    score = round(self.share_score(current_hex,color)**1.5)
                     if len(accumulated_scores) == 0:
                         accumulated_scores += [score]
                     else:
@@ -244,27 +247,56 @@ class HexagonalMap:
                 return (hexf[0] - 1,hexf[1] + 1)
             else:
                 return (hexf[0],hexf[1] + 1)
+    def painter(self,ax):
+        plot_colors ={
+                    'red': 'red',
+                    'yel': 'yellow',
+                    'bro': '#835C3B',
+                    'bla': 'black',
+                    'blu': 'blue',
+                    'grn': 'green',
+                    'gry': '#808080',
+                    '~~~': '#BFEFFF'
+                    }
+        hexes = self.map
+        for key in hexes:
+            hex_x = key[1]
+            hex_y = key[0]
+            align_hex = 0.5 if hex_x % 2 ==1 else 1
+            alphaval = 0.2 if hexes[key] == '~~~' else 0.7
+            hex_col = plot_colors[hexes[key]]
+            hexagon = RegularPolygon((hex_y - align_hex, -hex_x), numVertices=6, radius=np.sqrt(1 / 3),
+                                    alpha=alphaval, fill=True, color=hex_col)
+            ax.add_patch(hexagon)
     
 def path_cost(transit_colors):
     destination_color = transit_colors[-1]
     if ['~~~','~~~','~~~','~~~'] in [transit_colors[i:i + 4] for i in range(len(transit_colors) - 3)]:
         if destination_color == 'blu':
             path_work = 308
+        elif destination_color in ['yel','gry']:
+            path_work = 378
         else:
             path_work = 350
     elif ['~~~','~~~','~~~'] in [transit_colors[i:i + 3] for i in range(len(transit_colors) - 2)]:
         if destination_color == 'blu':
             path_work = 154
+        elif destination_color in ['yel','gry']:
+            path_work = 238
         else:
             path_work = 210
     elif ['~~~','~~~'] in [transit_colors[i:i + 2] for i in range(len(transit_colors) - 1)]:
         if destination_color == 'blu':
             path_work = 70
+        elif destination_color in ['yel','gry']:
+            path_work = 154
         else:
             path_work = 126
     elif ['~~~'] in [transit_colors[i:i + 1] for i in range(len(transit_colors))]:
         if destination_color == 'blu':
             path_work = 14
+        elif destination_color in ['yel','gry']:
+            path_work = 56
         else:
             path_work = 42
     else:
@@ -277,16 +309,20 @@ def path_cost(transit_colors):
                 trans_work = (trans_work + 70)/2
         if destination_color == 'yel': 
             if current_color not in ['yel','red','bro','~~~',' ~ '] and (tcn == 0 or transit_colors[tcn - 1] not in ['~~~',' ~ ']):
-                trans_work = (trans_work + 77)/2
+                trans_work = (trans_work + 70)/2
         if destination_color == 'bla':
             trans_work = 5*trans_work/6
         if destination_color == 'gry':
             if len(transit_colors) == 2:
-                trans_work = 9*trans_work/7
+                if transit_colors[0] in ['~~~',' ~ ']:
+                    trans_work = 12*trans_work/6
+                else:
+                    trans_work = 7*trans_work/6
             else:
-                trans_work = 5*trans_work/7
+                trans_work = 6*trans_work/6
         path_work += trans_work
     return path_work
+
 
 
 def color_index(color):
@@ -353,8 +389,19 @@ def bga_symbol(color):
     elif color == '~~~':
         return 'I'
                 
-                              
 
+
+def plot_map():
+    fig, ax = plt.subplots(1)
+    ax.set_aspect('equal')
+    # painter(map_tm['lines'],ax=ax, filling=True)
+    hex_map.painter(ax)
+    plt.autoscale(enable=True)
+    plt.show()
+                      
+
+
+# Example usage
 # Run the code by executing the following commands:
 
 #1 Create a colorless map for given river layout with parameters (height, width, form, rivers)
@@ -378,8 +425,9 @@ hex_map.create_map()
 #3 print the finished map as a string suitable for BGA format map-files
 print(hex_map.bga_format())
 
-#4 print an ugly colored preview of the map
-hex_map.display_final_map_colored()
+#4 print a colored preview of the map
+if __name__ == '__main__':
+    plot_map()
 
 
 # In[ ]:
