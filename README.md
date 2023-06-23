@@ -17,6 +17,7 @@ hex_map.create_map()
 
 print(hex_map.bga_format())
 
-4 print an ugly colored preview of the map
+#4 print a colored preview of the map
 
-hex_map.display_final_map_colored()
+if __name__ == '__main__':
+    plot_map()
