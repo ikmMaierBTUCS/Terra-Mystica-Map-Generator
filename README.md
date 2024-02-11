@@ -3,7 +3,7 @@ Create a Terra Mystica map for a given river layout
 
 Run the code in TM MapGen(1).py by executing the following commands:
 
-1 Create a colorless map for given river layout with parameters (height, width, form, rivers)
+1 Create a colorless map for given river layout with parameters (height, width, form, rivers, start)
 
 you can also copy the layout of some well-known maps: original, F&I, fjords, loon lakes, archipelago and arrow
 
