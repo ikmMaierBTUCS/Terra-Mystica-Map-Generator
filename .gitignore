@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.vscode/
+.idea/
+.claude/
+.venv/
+venv/
+map[0-9]*.txt
+lucktracker[0-9]*.txt
