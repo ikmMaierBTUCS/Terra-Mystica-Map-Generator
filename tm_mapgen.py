@@ -169,21 +169,8 @@ class HexagonalMap:
         share_score = round(distance**1.5 * self.contingent(color)**0.5 * max([1,6 - self.river_access_saldo(color)])**0.5 * max([0.4,4 - self.luck[color_index(color)]]) * 10)
         return share_score
 
-    def create_map(self):
-        # colour the start field
-        current_hex = self.start
-        if self.map[current_hex] != ' ~ ':
-            dice = random.randint(0,6)
-            self.map[current_hex] = self.colors[dice]
-            luck = [-self.value_of_hex(current_hex) / 7]*7
-            luck[dice] += self.value_of_hex(current_hex)
-            self.luck = np.array(luck, dtype=np.float64)
-        else:
-            self.map[current_hex] = '~~~'
-
-        # randomize first step
-        current_direction = random.randint(0,5)
-        current_hex = self.next_hex(current_hex,current_direction)
+    def fill_hex(self, current_hex):
+        # rivers become '~~~', land hexes get a random colour. A colour is the more likely, the farther away its next hex is
         if self.out_of_bounds(current_hex):
             pass
         elif self.map[current_hex] == ' ~ ':
@@ -205,11 +192,25 @@ class HexagonalMap:
                     break
             self.map[current_hex] = self.colors[dice]
             luck_change = [-(distances[color]**1.5) * self.value_of_hex(current_hex) / sum([dis**1.5 for dis in distances.values()]) for color in self.colors[:7]]
-            for color in range(len(luck_change)):
-                if luck_change[color] == dice:
-                    luck_change[color] += self.value_of_hex(current_hex)
-                    break
+            luck_change[dice] += self.value_of_hex(current_hex)
             self.luck += np.array(luck_change, dtype=np.float64)
+
+    def create_map(self):
+        # colour the start field
+        current_hex = self.start
+        if self.map[current_hex] != ' ~ ':
+            dice = random.randint(0,6)
+            self.map[current_hex] = self.colors[dice]
+            luck = [-self.value_of_hex(current_hex) / 7]*7
+            luck[dice] += self.value_of_hex(current_hex)
+            self.luck = np.array(luck, dtype=np.float64)
+        else:
+            self.map[current_hex] = '~~~'
+
+        # randomize first step
+        current_direction = random.randint(0,5)
+        current_hex = self.next_hex(current_hex,current_direction)
+        self.fill_hex(current_hex)
         current_direction = (current_direction + 2) % 6
 
         # further steps
@@ -218,29 +219,7 @@ class HexagonalMap:
                 # redirection, because current direction points at neither ??? nor  ~  nor out of map
                 current_direction = (current_direction - 1) % 6
             current_hex = self.next_hex(current_hex,current_direction)
-            if self.out_of_bounds(current_hex):
-                pass
-            elif self.map[current_hex] == ' ~ ':
-                self.map[current_hex] = '~~~'
-            else:
-                distances = {}
-                accumulated_scores = []
-                for color in self.colors[:7]:
-                    distances[color] = self.work_distance(current_hex,color)
-                    score = self.share_score(distances[color],color)
-                    if len(accumulated_scores) == 0:
-                        accumulated_scores += [score]
-                    else:
-                        accumulated_scores += [accumulated_scores[-1] + score]
-                randint = random.randint(0,accumulated_scores[-1] - 1)
-                for acsc in range(len(accumulated_scores)):
-                    if randint < accumulated_scores[acsc]:
-                        dice = acsc
-                        break
-                self.map[current_hex] = self.colors[dice]
-                luck_change = [-(distances[color]**1.5) * self.value_of_hex(current_hex) / sum([dis**1.5 for dis in distances.values()]) for color in self.colors[:7]]
-                luck_change[dice] += self.value_of_hex(current_hex)
-                self.luck += np.array(luck_change, dtype=np.float64)
+            self.fill_hex(current_hex)
             current_direction = (current_direction + 1) % 6
 
         luckstr = 'Luck: '
