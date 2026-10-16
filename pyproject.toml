@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tm-mapgen"
+version = "5.0.0"
+description = "Generator of balanced maps for the board game Terra Mystica"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = ["numpy"]
+
+[project.optional-dependencies]
+plot = ["matplotlib"]
+
+[project.scripts]
+tm-mapgen = "tm_mapgen:main"
+
+[project.urls]
+Homepage = "https://github.com/ikmMaierBTUCS/Terra-Mystica-Map-Generator"
+
+[tool.setuptools]
+py-modules = ["tm_mapgen"]

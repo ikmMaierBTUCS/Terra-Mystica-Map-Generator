@@ -15,15 +15,17 @@ Just download from `TMMapGen24-01 maps.zip` one of the files map3XX.txt.
 We have various different river layouts: map300-map305 = base map layout; -311 = fjords; -317 = fire&ice; -323 = loonlakes; -329 = arrow; -335 = archipelago; -341 = onion; -347 = 7isles; -353 = heart; -359 = peninsulas; -365 = twisty-land; -371 = ai1; -377 = ai2; -382 = bend; -387 = big-river; -391 = pirates-bay; -395 = swamp; -399 = central-island
 
 ## Generate maps yourself
+Install the generator as a Python package (`[plot]` adds matplotlib for the coloured preview):
 ```
-pip install -r requirements.txt
-python tm_mapgen.py fjords
+pip install "tm-mapgen[plot] @ git+https://github.com/ikmMaierBTUCS/Terra-Mystica-Map-Generator"
+tm-mapgen fjords
 ```
-This prints a fjords map in BGA format and shows a coloured preview of it. Run `python tm_mapgen.py -h` to see all river layouts and options, e.g.
+This prints a fjords map in BGA format and shows a coloured preview of it. Run `tm-mapgen -h` to see all river layouts and options, e.g.
 ```
-python tm_mapgen.py fjords -n 6 --save 306
+tm-mapgen fjords -n 6 --save 306
 ```
 generates 6 maps and saves them as map306.txt, ..., map311.txt.
+Without installing, you can also run `pip install -r requirements.txt` and `python tm_mapgen.py fjords` in a clone of this repository.
 
 You can also use the code in Python with your own river layout:
 ```python
@@ -44,4 +46,4 @@ plot_map(hex_map)
 The parameters are explained in `HexagonalMap.__init__`. You can also copy one of the river layouts in `LAYOUTS`.
 
 ## Versions
-The map generator has been improved in several versions, see the [releases](https://github.com/ikmMaierBTUCS/Terra-Mystica-Map-Generator/tags). Version 4 is used on Board Game Arena.
+The map generator has been improved in several versions, see the [releases](https://github.com/ikmMaierBTUCS/Terra-Mystica-Map-Generator/tags). Version 4 is used on Board Game Arena. Version 5 fixes the luck bookkeeping of the first hex after the start field.

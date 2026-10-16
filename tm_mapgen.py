@@ -1,7 +1,5 @@
 import argparse
 import random
-import matplotlib.pyplot as plt
-from matplotlib.patches import RegularPolygon
 import numpy as np
 
 class HexagonalMap:
@@ -327,6 +325,7 @@ class HexagonalMap:
             else:
                 return (hexf[0],hexf[1] + 1)
     def painter(self,ax):
+        from matplotlib.patches import RegularPolygon # matplotlib is only needed for plotting
         plot_colors ={
                     'red': 'red',
                     'yel': 'yellow',
@@ -456,6 +455,7 @@ def bga_symbol(color):
         return 'I'
 
 def plot_map(hex_map):
+    import matplotlib.pyplot as plt # matplotlib is only needed for plotting
     fig, ax = plt.subplots(1)
     ax.set_aspect('equal')
     hex_map.painter(ax)
@@ -515,7 +515,7 @@ LAYOUTS = {
 }
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(description='Generate balanced Terra Mystica maps for a given river layout.')
     parser.add_argument('layout', choices=LAYOUTS.keys(), help='river layout of the map')
     parser.add_argument('-n', '--number', type=int, default=1, help='number of maps to generate (default: 1)')
@@ -533,4 +533,11 @@ if __name__ == '__main__':
             with open('map'+str(args.save + i)+'.txt','w') as file:
                 file.write(bga_format)
         if not args.no_plot:
-            plot_map(hex_map)
+            try:
+                plot_map(hex_map)
+            except ImportError:
+                print('Install matplotlib to see a coloured preview of the map, or use --no-plot')
+
+
+if __name__ == '__main__':
+    main()
