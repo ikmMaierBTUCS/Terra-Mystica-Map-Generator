@@ -46,4 +46,4 @@ plot_map(hex_map)
 The parameters are explained in `HexagonalMap.__init__`. You can also copy one of the river layouts in `LAYOUTS`.
 
 ## Versions
-The map generator has been improved in several versions, see the [releases](https://github.com/ikmMaierBTUCS/Terra-Mystica-Map-Generator/tags). Version 4 is used on Board Game Arena. Version 5 fixes the luck bookkeeping of the first hex after the start field.
+The map generator has been improved in several versions, see the [releases](https://github.com/ikmMaierBTUCS/Terra-Mystica-Map-Generator/tags). Version 4 is used on Board Game Arena. Version 4.1 fixes the luck bookkeeping of the first hex after the start field.
